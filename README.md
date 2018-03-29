@@ -10,7 +10,12 @@
   install dependence
     npm install vue-cli -g
     vue init
-    npm install stylus stylus-loader --save-dev
+    npm install
+      stylus stylus-loader babel-polyfill--save-dev
+    npm install
+      babel-runtime fastclick --save
+
+
 
   configure eslintrc.js
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
@@ -39,6 +44,15 @@
       store
 ```
 
+### frame and header and router
+
+```
+  configure src/main.js
+    import 'babel-polyfill'
+    import 'fastclick'
+    fastclick.attach(document.body)
+
+```
 
 ## Build Setup
 
