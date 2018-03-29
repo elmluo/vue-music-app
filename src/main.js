@@ -3,7 +3,10 @@ import App from './App'
 import router from './router'
 import 'babel-polyfill'
 import fastclick from 'fastclick'
+import Api from './api'
 import 'common/stylus/index.styl'
+
+Vue.use(Api)
 
 Vue.config.productionTip = false
 
