@@ -1,5 +1,22 @@
 import originJsonp from 'jsonp'
 
+function param(data) {
+  let query = ''
+  for (let k in data) {
+    let value = data[k] !== undefined ? data[k] : ''
+    // query += '&' + k + '=' + encodeURIComponent(value)
+    query += `&${k}=${encodeURIComponent(value)}`
+  }
+  return query ? query.substring(1) : ''
+}
+
+/**
+ * jsonp 方法封装
+ * @param url
+ * @param data
+ * @param option
+ * @returns {Promise}
+ */
 export default function jsonp(url, data, option) {
   url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
 
@@ -12,13 +29,4 @@ export default function jsonp(url, data, option) {
       }
     })
   })
-}
-
-export function param(data) {
-  let url = ''
-  for (var k in data) {
-    let value = data[k] !== undefined ? data[k] : ''
-    url += '&' + k + '=' + encodeURIComponent(value)
-  }
-  return url ? url.substring(1) : ''
 }
