@@ -1,19 +1,41 @@
 <template>
-  <div class="recommend">
-
+  <div class="recommend" ref="recommend">
+    <div v-if="recommends.length" class="slider-wrapper" ref="sliderWrapper">
+      <m-slider>
+        <div v-for="(v, i) in recommends" :key="i">
+          <a :href="v.linkUrl">
+            <img :src="v.picUrl" class="needClick">
+          </a>
+        </div>
+      </m-slider>
+    </div>
+    <div class="recommend-list">
+      <h1>热门歌单推荐</h1>
+      <ul></ul>
+    </div>
+    <div class="loadding-container">
+    </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+import BScroll from 'better-scroll'
+import {ERR_OK} from 'api/config'
 export default {
+  data() {
+    return {
+      recommends: []
+    }
+  },
   created() {
     this._getRecommend()
-    console.log()
   },
   methods: {
     _getRecommend() {
       this.$api.getRecommend().then((res) => {
-        console.log(res)
+        if (res.code === ERR_OK) {
+          this.recommends = res.data.slider
+        }
       })
     }
   }
@@ -28,9 +50,9 @@ export default {
     width: 100%
     top: 88px
     bottom: 0
-    .recommend-content
-      height: 100%
-      overflow: hidden
+    /*.recommend-content*/
+      /*height: 100%*/
+      /*overflow: hidden*/
       .slider-wrapper
         position: relative
         width: 100%
