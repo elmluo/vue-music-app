@@ -25,7 +25,7 @@ export default {
     },
     interval: {
       type: Number,
-      default: 4000
+      default: 1000
     }
   },
   data() {
@@ -38,29 +38,35 @@ export default {
     // 让DOM先初始化结束，再去计算slider-group的宽度。等同于nextTick;
     this.$nextTick(() => {
       this._setSilderWidth()
-      this._initSlider()
       this._initDots()
+      // 用better-scroll渲染之后，children个数首尾会个加一个
+      this._initSlider()
+      this.autoPlay && this._autoPlay()
+    })
+    window.addEventListener('resize', () => {
+      if (!this.slider) return
+      this._setSilderWidth(true)
+      this.slider.refresh()
     })
   },
   methods: {
-    _setSilderWidth() {
+    _setSilderWidth(isResize) {
       this.children = this.$refs.sliderGroup.children
       let width = 0
       let sliderWidth = this.$refs.slider.clientWidth
       for (let i = 0; i < this.children.length; i++) {
         let child = this.children[i]
         addClass(child, 'slider-item')
-
         child.style.width = sliderWidth + 'px'
         width += sliderWidth
       }
-      if (this.loop) {
+      if (this.loop && !isResize) {
         width += 2 * sliderWidth
       }
       this.$refs.sliderGroup.style.width = width + 'px'
     },
     _initSlider() {
-      // 不同版本，better-scroll传入参数的方式不同
+      // 不同版本，better-scroll传入参数的方式不同, 1.9.1snap按照对象方式传入
       this.slider = new BScroll(this.$refs.slider, {
         scrollX: true,
         scrollY: false,
@@ -73,10 +79,21 @@ export default {
       })
       this.slider.on('scrollEnd', () => {
         this.currentPageIndex = this.slider.getCurrentPage().pageX
+        this.autoPlay && this._autoPlay()
+      })
+      this.slider.on('beforeScrollStart', () => {
+        if (this.autoPlay) {
+          clearTimeout(this.timer)
+        }
       })
     },
     _initDots() {
-      this.dots = new Array(this.children.length - 2)
+      this.dots = new Array(this.children.length)
+    },
+    _autoPlay() {
+      this.timer = setTimeout(() => {
+        this.slider.next()
+      }, this.interval)
     }
   }
 }
