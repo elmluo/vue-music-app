@@ -29,12 +29,20 @@ export default {
   },
   created() {
     this._getRecommend()
+    this._getDiscList()
   },
   methods: {
     _getRecommend() {
       this.$api.getRecommend().then((res) => {
         if (res.code === ERR_OK) {
           this.recommends = res.data.slider
+        }
+      })
+    },
+    _getDiscList() {
+      this.$api.getDiscList().then((res) => {
+        if (res.code === ERR_OK) {
+          console.log(res.data)
         }
       })
     }

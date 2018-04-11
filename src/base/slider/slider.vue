@@ -25,7 +25,7 @@ export default {
     },
     interval: {
       type: Number,
-      default: 1000
+      default: 4000
     }
   },
   data() {
@@ -95,6 +95,9 @@ export default {
         this.slider.next()
       }, this.interval)
     }
+  },
+  destoryed() {
+    clearTimeout(this.timer)
   }
 }
 </script>
